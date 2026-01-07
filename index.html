@@ -1,249 +1,350 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Wedding Photo Upload</title>
-
-<style>
-/* ---------------- GLOBAL ---------------- */
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background: #faf7f5;
-  color: #333;
-  overflow: hidden;
-}
-
-#bgVideo {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -1;
-}
-
-/* ---------------- LAYOUT ---------------- */
-.container {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wedding Photo Upload</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #faf7f5;
+      color: #333;
+      overflow-x: hidden;
+    }
+    #bgVideo {
+      position: fixed;
+      top: 0;
+      left: 0;
+      min-width: 100vw;
+      min-height: 100vh;
+      width: auto;
+      height: auto;
+      z-index: -1;
+      object-fit: cover;
+      background: #faf7f5;
+    }
+    .container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    @font-face {
+    font-family: 'OrangeAvenue';
+    src: url('fonts/OrangeAvenueDEMO-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    }
+    @font-face {
+    font-family: 'GreatVibes';
+    src: url('fonts/GreatVibes-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    }
+    @font-face {
+    font-family: 'OrangeAvenueOutline';
+    src: url('fonts/OrangeAvenueOutlineDEMO-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+  }
+    h1 {
+      font-family: 'OrangeAvenue', sans-serif;
+      font-size: 2.0rem;
+      margin-bottom: 8px;
+      color: #7a6c79;
+      position: relative;
+      letter-spacing: 2px;
+      text-shadow: 0 2px 12px rgba(239, 98, 159, 0.18);
+    }
+p {
+  font-family: 'GreatVibes', sans-serif;
+  font-size: 1.8rem;
+  font-style: italic;
+  margin-bottom: 24px;
+  color: #301c2c98;
+  letter-spacing: 1px;
   text-align: center;
 }
+    input[type="file"] {
+      display: none;
+    }
+    label.upload-btn, button {
+      display: inline-block;
+      padding: 14px 24px;
+      background: linear-gradient(90deg, #eecda3 0%, #ef629f 100%);
+      color: white;
+      border-radius: 12px;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 4px 16px rgba(239, 98, 159, 0.15);
+      transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
 
-h1 {
-  font-size: 2rem;
-  margin: 8px 0;
-  letter-spacing: 2px;
-}
-
-p {
-  font-size: 1.4rem;
-  margin-bottom: 16px;
-}
-
-/* ---------------- BUTTONS ---------------- */
-.upload-btn, button {
-  padding: 14px 24px;
-  border-radius: 12px;
-  border: none;
-  font-weight: 600;
-  background: linear-gradient(90deg, #eecda3, #ef629f);
-  color: white;
-  cursor: pointer;
-}
-
-input[type="file"] {
-  display: none;
-}
-
-/* ---------------- SCROLL CONTAINER ---------------- */
-#scrollContainer {
-  flex: 1;
-  overflow-y: auto;
-  margin-top: 16px;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* ---------------- ULTRA MOBILE GRID ---------------- */
-.preview {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
-  gap: 10px;
-  contain: strict;
-  content-visibility: auto;
-}
-
-/* ITEM */
+    label.upload-btn:hover, button:hover {
+      transform: scale(1.07);
+      box-shadow: 0 8px 24px rgba(239, 98, 159, 0.25);
+      background: linear-gradient(90deg, #ef629f 0%, #eecda3 100%);
+    }
+    .preview {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 10px;
+      width: 100%;
+    }
+    .preview img {
+      width: 100%;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+    button {
+      margin-top: 24px;
+      padding: 14px 24px;
+      font-size: 1rem;
+      border-radius: 12px;
+      border: none;
+      background: #333;
+      color: white;
+      cursor: pointer;
+    }
 .preview > div {
   position: relative;
-  height: 96px;
+  width: 100%;
+  height: 100px;
   overflow: hidden;
-  contain: strict;
-  will-change: transform, opacity;
-  transform: translateZ(0);
+  transition: transform 0.3s cubic-bezier(.4,2,.6,1), opacity 0.3s, scale 0.3s;
 }
-
-/* IMAGE */
 .preview img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 1;
-  transition: opacity 160ms ease-out;
+  border-radius: 8px;
+  transition: filter 0.6s ease-out;
 }
-
 .preview img.low-quality {
-  opacity: 0.45;
+  filter: blur(8px);
 }
-
-/* DELETE BUTTON */
+.preview img.high-quality {
+  filter: blur(0px);
+}
 .preview button {
   position: absolute;
-  top: 2px;
-  right: 2px;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: rgba(239,98,159,0.95);
+  top: 0px;
+  right: 0px;
+  background: #ef629f;
   color: #fff;
-  font-size: 1.1rem;
   border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-size: 1.2rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 2px 8px rgba(239,98,159,0.18);
+  transition: background 0.2s, transform 0.2s;
+  z-index: 2;
+  margin: 0;
+  padding: 0;
+  line-height: 1;
 }
-
-/* INSTANT DELETE */
-.preview > div.removing {
+.preview button:hover {
+  background: #c59d5f;
+  transform: scale(1.1);
+}
+.preview > div.dissolve {
   opacity: 0;
-  transform: scale(0.92);
-  transition: opacity 140ms ease-out, transform 140ms ease-out;
+  scale: 0.7;
   pointer-events: none;
+  transition: opacity 0.4s, scale 0.4s;
 }
-</style>
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <video autoplay muted loop id="bgVideo">
+    <source src="videos/BG.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+  <div class="container">
+    <h1>Petros & Christina</h1>
+    <p>June 20 2026</p>
 
-<video autoplay muted loop id="bgVideo">
-  <source src="videos/BG.mp4" type="video/mp4" />
-</video>
+    <label class="upload-btn">
+      Select Photos
+      <input type="file" id="fileInput" accept="image/*" multiple />
+    </label>
 
-<div class="container">
-  <h1>Petros & Christina</h1>
-  <p>June 20 2026</p>
-
-  <label class="upload-btn">
-    Select Photos
-    <input type="file" id="fileInput" accept="image/*" multiple />
-  </label>
-
-  <div id="scrollContainer">
     <div class="preview" id="preview"></div>
+
+    <button onclick="uploadPhotos()">Upload</button>
   </div>
 
-  <button onclick="uploadPhotos()">Upload</button>
-</div>
-
 <script>
-/* ---------------- VIDEO ---------------- */
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('bgVideo').playbackRate = 0.4;
+  const bgVideo = document.getElementById('bgVideo');
+  bgVideo.playbackRate = 0.4;
 });
 
-/* ---------------- STATE ---------------- */
 const fileInput = document.getElementById('fileInput');
 const preview = document.getElementById('preview');
-const scrollContainer = document.getElementById('scrollContainer');
-
-const ITEM_SIZE = 106;
-const BUFFER = 8;
 
 let selectedFiles = [];
 let objectURLs = new Map();
+let inactivityTimer = null;
+const BATCH_SIZE = 8;
 
-/* ---------------- FILE INPUT ---------------- */
+/* -----------------------------
+   FILE SELECTION
+------------------------------ */
 fileInput.addEventListener('change', () => {
-  selectedFiles.push(...Array.from(fileInput.files));
-  updateVirtualGrid();
+  const files = Array.from(fileInput.files);
+  addFiles(files);
+  resetInactivityTimer();
 });
 
-/* ---------------- VIRTUAL GRID ---------------- */
-scrollContainer.addEventListener(
-  'scroll',
-  () => requestAnimationFrame(updateVirtualGrid),
-  { passive: true }
+/* -----------------------------
+   USER ACTIVITY TRACKING
+------------------------------ */
+['mousemove', 'keydown', 'click', 'touchstart'].forEach(evt =>
+  document.addEventListener(evt, resetInactivityTimer)
 );
 
-function updateVirtualGrid() {
-  const scrollTop = scrollContainer.scrollTop;
-  const height = scrollContainer.clientHeight;
-  const cols = Math.max(1, Math.floor(preview.clientWidth / ITEM_SIZE));
-
-  const startRow = Math.floor(scrollTop / ITEM_SIZE);
-  const visibleRows = Math.ceil(height / ITEM_SIZE);
-
-  const start = Math.max(0, (startRow - BUFFER) * cols);
-  const end = (startRow + visibleRows + BUFFER) * cols;
-
-  renderItems(start, end, cols);
+function resetInactivityTimer() {
+  if (inactivityTimer) clearTimeout(inactivityTimer);
+  inactivityTimer = setTimeout(() => {
+    requestIdleCallback(loadHighQuality, { timeout: 800 });
+  }, 500);
 }
 
-/* ---------------- RENDER ---------------- */
-function renderItems(start, end, cols) {
-  preview.innerHTML = '';
+/* -----------------------------
+   ADD FILES
+------------------------------ */
+function addFiles(files) {
+  const startIndex = selectedFiles.length;
+  selectedFiles.push(...files);
 
-  for (let i = start; i < end; i++) {
-    const file = selectedFiles[i];
-    if (!file) continue;
+  files.forEach((file, i) => {
+    const index = startIndex + i;
+    createPreviewItem(file, index);
+  });
 
-    const wrapper = document.createElement('div');
-    const img = document.createElement('img');
-    const btn = document.createElement('button');
-
-    img.className = 'low-quality';
-    btn.textContent = '✕';
-
-    btn.onclick = () => removeItem(wrapper, i);
-
-    const url = URL.createObjectURL(file);
-    objectURLs.set(i, url);
-    img.src = url;
-
-    img.onload = () => img.classList.remove('low-quality');
-
-    wrapper.append(img, btn);
-    preview.appendChild(wrapper);
-  }
-
-  preview.style.height =
-    Math.ceil(selectedFiles.length / cols) * ITEM_SIZE + 'px';
+  loadLowQualityBatched();
 }
 
-/* ---------------- DELETE ---------------- */
+/* -----------------------------
+   CREATE PREVIEW ITEM
+------------------------------ */
+function createPreviewItem(file, index) {
+  const wrapper = document.createElement('div');
+
+  const img = document.createElement('img');
+  img.className = 'low-quality';
+  img.dataset.index = index;
+  img.loading = 'lazy';
+
+  const delBtn = document.createElement('button');
+  delBtn.textContent = '✕';
+  delBtn.title = 'Remove photo';
+
+  delBtn.onclick = () => removeItem(wrapper, index);
+
+  wrapper.appendChild(img);
+  wrapper.appendChild(delBtn);
+  preview.appendChild(wrapper);
+}
+
+/* -----------------------------
+   REMOVE IMAGE
+------------------------------ */
 function removeItem(wrapper, index) {
-  selectedFiles[index] = null;
-  wrapper.classList.add('removing');
+  wrapper.classList.add('dissolve');
 
   setTimeout(() => {
     wrapper.remove();
+
     const url = objectURLs.get(index);
-    if (url) setTimeout(() => URL.revokeObjectURL(url), 2000);
+    if (url) URL.revokeObjectURL(url);
+
+    selectedFiles[index] = null;
     objectURLs.delete(index);
-  }, 150);
+  }, 400);
 }
 
-/* ---------------- UPLOAD ---------------- */
+/* -----------------------------
+   BATCH LOADING (LOW QUALITY)
+------------------------------ */
+async function loadLowQualityBatched() {
+  const images = [...preview.querySelectorAll('img.low-quality')];
+
+  for (let i = 0; i < images.length; i += BATCH_SIZE) {
+    const batch = images.slice(i, i + BATCH_SIZE);
+
+    batch.forEach(img => {
+      const idx = Number(img.dataset.index);
+      const file = selectedFiles[idx];
+      if (!file || objectURLs.has(idx)) return;
+
+      const url = URL.createObjectURL(file);
+      objectURLs.set(idx, url);
+      img.src = url;
+    });
+
+    await nextFrame();
+  }
+}
+
+/* -----------------------------
+   HIGH QUALITY UPGRADE (IDLE)
+------------------------------ */
+function loadHighQuality() {
+  const images = preview.querySelectorAll('img.low-quality');
+
+  images.forEach(img => {
+    img.classList.remove('low-quality');
+    img.classList.add('high-quality');
+  });
+}
+
+/* -----------------------------
+   UPLOAD HANDLER
+------------------------------ */
 function uploadPhotos() {
-  const files = selectedFiles.filter(Boolean);
-  if (!files.length) {
+  const filesToUpload = selectedFiles.filter(Boolean);
+
+  if (!filesToUpload.length) {
     alert('Please select at least one photo');
     return;
   }
-  alert(`Ready to upload ${files.length} photos`);
+
+  alert(`Ready to upload ${filesToUpload.length} photos`);
+  // Upload logic goes here
+}
+
+/* -----------------------------
+   UTILS
+------------------------------ */
+function nextFrame() {
+  return new Promise(resolve => requestAnimationFrame(resolve));
 }
 </script>
 
