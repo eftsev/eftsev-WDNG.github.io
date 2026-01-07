@@ -1,8 +1,0 @@
-
-{
-  "name": "Elysian Memories - Wedding Photo Gallery",
-  "description": "A high-performance, elegant wedding photo upload and curation app. Features optimized image processing and Gemini-powered sentiment analysis to help couples organize their special day's memories.",
-  "requestFramePermissions": [
-    "camera"
-  ]
-}
